@@ -14,7 +14,7 @@ app.url_map.strict_slashes = False
 CORS(app)
 
 # Create the jackson family object
-jackson_family = FamilyStructure("Jackson")
+jackson_family = FamilyStructure("Jackson") #es la instancia, la declaración del objeto como tal
 
 
 # Handle/serialize errors like a JSON object
@@ -38,6 +38,29 @@ def handle_hello():
     return jsonify(response_body), 200
 
 
+@app.route('/member', methods=['POST'])
+def add_member():
+    new_member = request.get_json()     #datos que mando por postman, vienen de la URL
+    if not new_member:                  #si esta mal enivado el miembro
+        return jsonify({'Error': 'Entrada inválida'}), 400
+    jackson_family.add_member(new_member)  #llamo al miembro que llame en detasctructures (add_member)  linea31
+    return jsonify({'Message': 'Miembro agregado satisfactoriamente'}), 200
+
+@app.route('/member/<int:member_id>', methods=['DELETE'])
+def delete_member(member_id):
+    if jackson_family.delete_member(member_id):
+        return jsonify({'Done': True}), 200
+    else:
+        return jsonify({'Error': 'Miembro no encontrado'}), 400 
+    
+@app.route('/member/<int:member_id>', methods=['GET'])
+def get_member(member_id):
+    member = jackson_family.get_member(member_id)
+    if member: 
+        return jsonify(member), 200
+    else:
+        return jsonify({'Error': 'Miembro no encontrado'}), 404      
+    
 
 # This only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
