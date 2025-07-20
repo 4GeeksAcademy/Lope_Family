@@ -33,29 +33,28 @@ def sitemap():
 def handle_hello():
     # This is how you can use the Family datastructure by calling its methods
     members = jackson_family.get_all_members()
-    response_body = {"hello": "world",
-                     "family": members}
-    return jsonify(response_body), 200
+    return jsonify(members), 200
 
 
-@app.route('/member', methods=['POST'])
+@app.route('/members', methods=['POST'])
 def add_member():
     new_member = request.get_json()     #datos que mando por postman, vienen de la URL
-    if not new_member:                  #si esta mal enivado el miembro
+    if not new_member:                  #si esta mal enviado el miembro
         return jsonify({'Error': 'Entrada inválida'}), 400
     jackson_family.add_member(new_member)  #llamo al miembro que llame en detasctructures (add_member)  linea31
-    return jsonify({'Message': 'Miembro agregado satisfactoriamente'}), 200
+    return jsonify(new_member), 200
 
-@app.route('/member/<int:member_id>', methods=['DELETE'])
-def delete_member(member_id):
-    if jackson_family.delete_member(member_id):
-        return jsonify({'Done': True}), 200
+@app.route('/members/<int:id>', methods=['DELETE'])
+def delete_member(id):
+    delete = jackson_family.delete_member(id)
+    if delete:
+        return jsonify({'done': True}), 200
     else:
         return jsonify({'Error': 'Miembro no encontrado'}), 400 
     
-@app.route('/member/<int:member_id>', methods=['GET'])
-def get_member(member_id):
-    member = jackson_family.get_member(member_id)
+@app.route('/members/<int:id>', methods=['GET'])
+def get_member(id):
+    member = jackson_family.get_member(id)
     if member: 
         return jsonify(member), 200
     else:
