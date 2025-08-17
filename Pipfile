@@ -4,15 +4,16 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pytest = "*"
 
 [packages]
-flask = "*"
 psycopg2-binary = "*"
 flask-cors = "*"
 pytest = "*"
 mock = "*"
 pytest-testdox = "*"
 pytest-ordering = "*"
+flask = "*"
 
 [requires]
 python_version = "3.13"
