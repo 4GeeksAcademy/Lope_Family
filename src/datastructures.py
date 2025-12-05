@@ -1,45 +1,67 @@
-"""
-Update this file to implement the following already declared methods:
-- add_member: Should add a member to the self._members list
-- delete_member: Should delete a member from the self._members list
-- get_member: Should return a member from the self._members list
-"""
-
 class FamilyStructure:
-    def __init__(self, last_name):
+
+    def __init__(self, last_name: str):
         self.last_name = last_name
         self._next_id = 1
-        self._members = [
-            {
-                "id": self._generate_id(),
-                "first_name": "John",
-                "last_name": last_name,
-                "age": 33,
-                "lucky_numbers": [7, 13, 22]
-            }
-        ]
+        self._members = []
 
-    # This method generates a unique incremental ID
-    def _generate_id(self):
+        # Miembros iniciales (John, Jane, Jimmy)
+        self.add_member({
+            "first_name": "John",
+            "age": 33,
+            "lucky_numbers": [7, 13, 22]
+        })
+        self.add_member({
+            "first_name": "Jane",
+            "age": 35,
+            "lucky_numbers": [10, 14, 3]
+        })
+        self.add_member({
+            "first_name": "Jimmy",
+            "age": 5,
+            "lucky_numbers": [1]
+        })
+
+    # NO TOCAR: genera IDs únicos
+    def _generate_id(self) -> int:
         generated_id = self._next_id
         self._next_id += 1
         return generated_id
 
-    def add_member(self, member):
-        ## You have to implement this method
-        ## Append the member to the list of _members
-        pass
+    def add_member(self, member: dict) -> dict:
+        """
+        Agrega un nuevo miembro a la familia.
+        Si no trae id, se genera uno.
+        El last_name SIEMPRE es el de la familia.
+        """
+        if member.get("id") is None:
+            member["id"] = self._generate_id()
 
-    def delete_member(self, id):
-        ## You have to implement this method
-        ## Loop the list and delete the member with the given id
-        pass
+        member["last_name"] = self.last_name
 
-    def get_member(self, id):
-        ## You have to implement this method
-        ## Loop all the members and return the one with the given id
-        pass
+        self._members.append(member)
+        return member
 
-    # This method is done, it returns a list with all the family members
-    def get_all_members(self):
+    def delete_member(self, id: int) -> bool:
+        """
+        Elimina el miembro cuyo id coincida.
+        Devuelve True si se ha eliminado, False si no existía.
+        """
+        original_len = len(self._members)
+        self._members = [m for m in self._members if m["id"] != id]
+        return len(self._members) != original_len
+
+    def get_member(self, id: int) -> dict | None:
+        """
+        Devuelve el miembro con ese id o None si no existe.
+        """
+        for m in self._members:
+            if m["id"] == id:
+                return m
+        return None
+
+    def get_all_members(self) -> list[dict]:
+        """
+        Devuelve la lista completa de miembros.
+        """
         return self._members
